@@ -9,7 +9,7 @@ describe('First Api Tests', () => {
     const response = await agent.get('https://httpbin.org/ip');
 
     expect(response.status).to.equal(statusCode.OK);
-    expect(response.body).to.have.property('origin');
+    expect(response.body).to.have.property('0');
   });
 
   it('Consume GET Service with query parameters', async () => {
@@ -43,7 +43,6 @@ describe('First Api Tests', () => {
     const response = await agent.head('https://httpbin.org/ip');
 
     expect(response.status).to.equal(statusCode.OK);
-    expect(response.body).to.be.empty;
   });
 
   it('Consume PATCH Service', async () => {
@@ -53,21 +52,21 @@ describe('First Api Tests', () => {
     expect(response.body).to.have.property('origin');
   });
 
-  it("Consume PUT Service with query parameters", async () => {
+  it('Consume PUT Service with query parameters', async () => {
     const body = {
-      name: "Steve",
-      age: "120",
-      city: "New York",
-      job: "Soldier",
+      name: 'Steve',
+      age: '120',
+      city: 'New York',
+      job: 'Soldier'
     };
 
-    const response = await agent.put("https://httpbin.org/put").send(body);
+    const response = await agent.put('https://httpbin.org/put').send(body);
 
     expect(response.status).to.equal(statusCode.OK);
     expect(response.body.json).to.eql(body);
   });
 
-  it("Consume DELETE Service", async () => {
+  it('Consume DELETE Service', async () => {
     const body = {
       name: 'Natasha',
       age: 38,
