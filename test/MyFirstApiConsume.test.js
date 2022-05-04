@@ -52,4 +52,29 @@ describe('First Api Tests', () => {
     expect(response.status).to.equal(statusCode.OK);
     expect(response.body).to.have.property('origin');
   });
+
+  it("Consume PUT Service with query parameters", async () => {
+    const body = {
+      name: "Steve",
+      age: "120",
+      city: "New York",
+      job: "Soldier",
+    };
+
+    const response = await agent.put("https://httpbin.org/put").send(body);
+
+    expect(response.status).to.equal(statusCode.OK);
+    expect(response.body.json).to.eql(body);
+  });
+
+  it("Consume DELETE Service", async () => {
+    const body = {
+      name: 'Natasha',
+      age: 38,
+      city: 'Stalingrad'
+    };
+
+    const response = await agent.delete('https://httpbin.org/delete').send(body);
+    expect(response.status).to.equal(statusCode.OK);
+  });
 });
