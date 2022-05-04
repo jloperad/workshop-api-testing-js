@@ -40,9 +40,10 @@ describe('First Api Tests', () => {
   });
 
   it('Consume HEAD Service', async () => {
-    const response = await agent.head('https://httpbin.org/ip');
+    const response = await agent.head('https://httpbin.org/get');
 
     expect(response.status).to.equal(statusCode.OK);
+    expect(response.header['Content-Type'], /json/);
   });
 
   it('Consume PATCH Service', async () => {
@@ -73,7 +74,9 @@ describe('First Api Tests', () => {
       city: 'Stalingrad'
     };
 
-    const response = await agent.delete('https://httpbin.org/delete').send(body);
+    const response = await agent
+      .delete('https://httpbin.org/delete')
+      .send(body);
     expect(response.status).to.equal(statusCode.OK);
   });
 });
