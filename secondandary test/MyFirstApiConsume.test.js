@@ -9,7 +9,7 @@ describe('First Api Tests', () => {
     const response = await agent.get('https://httpbin.org/ip');
 
     expect(response.status).to.equal(statusCode.OK);
-    expect(response.body).to.have.property('0');
+    expect(response.body).to.have.property('origin');
   });
 
   it('Consume GET Service with query parameters', async () => {
