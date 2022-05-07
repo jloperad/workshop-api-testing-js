@@ -1,16 +1,33 @@
 const agent = require('superagent');
 const statusCode = require('http-status-codes');
 const chai = require('chai');
+const { afterEach, beforeEach } = require('mocha');
 
 const { expect } = chai;
 
 const PraxisURL = 'http://localhost:8080/api';
 
 describe('Test Praxis API with UpdateQuality endpoint', () => {
-  before(async () => {
+  beforeEach(async () => {
     const items = await agent.get(`${PraxisURL}/items`);
     if (items.body.length > 0) {
       items.body.forEach(async (item) => { await agent.delete(`${PraxisURL}/items/${item.id}`); });
+    }
+  });
+  afterEach(async () => {
+    const items = await agent.get(`${PraxisURL}/items`);
+    if (items.body.length > 0) {
+      items.body.forEach(async (item) => { await agent.delete(`${PraxisURL}/items/${item.id}`); });
+    }
+  });
+
+  it('before all delete existing items', async () => {
+    const items = await agent.get(`${PraxisURL}/items`);
+
+    if (items.body.length > 0) {
+      items.body.forEach(async (item) => {
+        await agent.delete(`${PraxisURL}/items/${item.id}`);
+      });
     }
   });
 
@@ -31,8 +48,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(normalItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(normalItem.quality - 1);
     expect(res.body[0].type).to.eql(normalItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in normal type item with sellIn < 0', async () => {
@@ -52,8 +67,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(normalItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(normalItem.quality - 2);
     expect(res.body[0].type).to.eql(normalItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in normal type item with quality = 0', async () => {
@@ -73,8 +86,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(normalItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(normalItem.quality);
     expect(res.body[0].type).to.eql(normalItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in AGED type item', async () => {
@@ -94,8 +105,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(agedItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(agedItem.quality + 1);
     expect(res.body[0].type).to.eql(agedItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in AGED type item with quality = 50', async () => {
@@ -115,8 +124,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(agedItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(agedItem.quality);
     expect(res.body[0].type).to.eql(agedItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in LEGENDARY type item', async () => {
@@ -136,8 +143,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(legendaryItem.sellIn);
     expect(res.body[0].quality).to.eql(legendaryItem.quality);
     expect(res.body[0].type).to.eql(legendaryItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in TICKETS type item with sellIn > 10', async () => {
@@ -157,8 +162,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(ticketsItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(ticketsItem.quality + 1);
     expect(res.body[0].type).to.eql(ticketsItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in TICKETS type item with sellIn < 11', async () => {
@@ -178,8 +181,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(ticketsItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(ticketsItem.quality + 2);
     expect(res.body[0].type).to.eql(ticketsItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in TICKETS type item with sellIn < 6', async () => {
@@ -199,8 +200,6 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(ticketsItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(ticketsItem.quality + 3);
     expect(res.body[0].type).to.eql(ticketsItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 
   it('Consume POST service with update quality endpoint in TICKETS type item with sellIn = 0', async () => {
@@ -220,7 +219,5 @@ describe('Test Praxis API with UpdateQuality endpoint', () => {
     expect(res.body[0].sellIn).to.eql(ticketsItem.sellIn - 1);
     expect(res.body[0].quality).to.eql(0);
     expect(res.body[0].type).to.eql(ticketsItem.type);
-
-    await agent.delete(`${PraxisURL}/items/${res.body[0].id}`);
   });
 });
