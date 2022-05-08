@@ -23,6 +23,12 @@ describe('Test Get Item Endpoint', () => {
     const response = await agent.post(`${PraxisURL}/items`).send(newItem);
     newItemId = response.body.id;
   });
+  after(async () => {
+    const items = await agent.get(`${PraxisURL}/items`);
+    if (items.body.length > 0) {
+      items.body.forEach(async (item) => { await agent.delete(`${PraxisURL}/items/${item.id}`); });
+    }
+  });
   it('Get Item created last', async () => {
     const response = await agent.get(`${PraxisURL}/items`);
 

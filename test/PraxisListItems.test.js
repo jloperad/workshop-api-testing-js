@@ -16,6 +16,12 @@ describe('Test List Items Endpoint', () => {
       items.body.forEach(async (item) => { await agent.delete(`${PraxisURL}/items/${item.id}`); });
     }
   });
+  after(async () => {
+    const items = await agent.get(`${PraxisURL}/items`);
+    if (items.body.length > 0) {
+      items.body.forEach(async (item) => { await agent.delete(`${PraxisURL}/items/${item.id}`); });
+    }
+  });
   it('Empty List', async () => {
     const response = await agent.get(`${PraxisURL}/items`);
 
@@ -32,7 +38,7 @@ describe('Test List Items Endpoint', () => {
 
     const newItem = await agent.post(`${PraxisURL}/items`).send(item);
     const itemId = newItem.body.id;
-    const response = await agent.get('http://localhost:8080/api/items');
+    const response = await agent.get(`${PraxisURL}/items`);
 
     expect(response.status).to.equal(statusCode.OK);
     expect(response.body).to.have.lengthOf(1);
